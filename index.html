@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data Science | University of Regina</title>
+  <style>
+:root {
+  --background: oklch(0.977 0.008 95);
+  --foreground: oklch(0.23 0.03 160);
+  --card: oklch(0.995 0.004 95);
+  --primary: oklch(0.37 0.07 158);
+  --primary-foreground: oklch(0.985 0.008 95);
+  --secondary: oklch(0.94 0.018 150);
+  --muted: oklch(0.955 0.012 100);
+  --muted-foreground: oklch(0.46 0.02 155);
+  --border: oklch(0.88 0.015 110);
+  --gold: oklch(0.78 0.13 85);
+  --pine: oklch(0.28 0.045 160);
+  --cream: oklch(0.96 0.02 95);
+  --stat: oklch(0.55 0.08 190);
+  --math: oklch(0.5 0.08 250);
+  --option: oklch(0.62 0.03 80);
+  --other: oklch(0.72 0.02 80);
+  --elective: oklch(0.82 0.02 95);
+  --sans: "Source Sans 3", "Segoe UI", sans-serif;
+  --display: Fraunces, Georgia, serif;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.5;
+}
+img { max-width: 100%; display: block; }
+button, input { font: inherit; }
+a { color: inherit; }
+.lead a { color: var(--primary); text-decoration: underline; text-underline-offset: 0.18em; }
+h1, h2, h3, .display { font-family: var(--display); font-weight: 560; letter-spacing: -0.02em; }
+h1 { font-size: clamp(2.4rem, 5vw, 3.2rem); line-height: 1.05; margin: 0.6rem 0 0; }
+h2 { font-size: clamp(1.8rem, 3vw, 2.3rem); line-height: 1.15; margin: 0.35rem 0 0; }
+h3 { margin: 0; }
+
+.wrap { width: min(72rem, calc(100% - 2rem)); margin-inline: auto; }
+.kicker { font-size: 0.75rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--primary); margin: 0; }
+.muted { color: var(--muted-foreground); }
+.lead { max-width: 42rem; }
+.lead p { margin: 0 0 1rem; line-height: 1.7; }
+
+.header {
+  position: sticky; top: 0; z-index: 40;
+  background: var(--pine); color: white;
+  border-bottom: 1px solid rgb(255 255 255 / 0.1);
+}
+.header-inner { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 0; }
+.brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; min-width: 0; }
+.brand img { height: 2.25rem; width: auto; }
+.brand-sub {
+  display: none;
+  border-left: 1px solid rgb(255 255 255 / 0.25);
+  padding-left: 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1.25;
+  color: rgb(255 255 255 / 0.8);
+}
+.nav { margin-left: auto; display: none; gap: 0.25rem; }
+.nav a, .sheet a {
+  text-decoration: none;
+  border-radius: 0.4rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  color: rgb(255 255 255 / 0.8);
+}
+.nav a:hover, .nav a[aria-current="page"] { background: rgb(255 255 255 / 0.1); color: white; }
+.nav a[aria-current="page"] { color: var(--gold); }
+.menu-btn {
+  margin-left: auto;
+  display: grid; place-items: center;
+  width: 2.25rem; height: 2.25rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgb(255 255 255 / 0.2);
+  background: transparent; color: white; cursor: pointer;
+}
+.sheet-back {
+  position: fixed; inset: 0; background: rgb(0 0 0 / 0.35); z-index: 50;
+}
+.sheet {
+  position: fixed; top: 0; right: 0; bottom: 0; width: min(20rem, 80vw);
+  background: var(--background); color: var(--foreground); z-index: 51;
+  padding: 1.25rem; box-shadow: -8px 0 30px rgb(0 0 0 / 0.12);
+}
+.sheet header { display: flex; justify-content: space-between; align-items: center; }
+.sheet a { display: block; color: var(--foreground); padding: 0.8rem 0.4rem; }
+.sheet a:hover { background: var(--muted); }
+.icon-btn { border: 0; background: transparent; cursor: pointer; font-size: 1.3rem; }
+
+.crumbs { font-size: 0.9rem; color: var(--muted-foreground); margin: 0; }
+.hero {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+}
+.hero-grid {
+  display: grid; gap: 2rem; padding: 2.5rem 0 3rem;
+}
+.pills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.2rem; }
+.pill, .btn, .chip {
+  border-radius: 999px; border: 0; cursor: pointer;
+  padding: 0.45rem 1rem; font-size: 0.9rem;
+}
+.pill { background: var(--muted); color: var(--foreground); }
+.pill[aria-pressed="true"], .chip[aria-pressed="true"] {
+  background: var(--primary); color: var(--primary-foreground);
+}
+.pill.ghost { background: var(--card); box-shadow: inset 0 0 0 1px var(--border); }
+.actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.4rem; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  text-decoration: none; height: 2.5rem; padding-inline: 1rem;
+  background: var(--primary); color: var(--primary-foreground);
+}
+.btn.outline { background: transparent; color: var(--foreground); box-shadow: inset 0 0 0 1px var(--border); }
+.btn.sm { height: 2rem; font-size: 0.85rem; background: white; color: var(--foreground); box-shadow: inset 0 0 0 1px var(--border); }
+.notice {
+  border: 1px solid color-mix(in oklch, var(--gold) 60%, white);
+  background: color-mix(in oklch, var(--gold) 18%, white);
+  border-radius: 0.6rem; padding: 0.55rem 0.75rem; font-size: 0.9rem;
+}
+.facts {
+  background: var(--pine); color: white; border-radius: 1rem; padding: 1.25rem;
+  height: fit-content;
+}
+.facts dt { font-size: 0.75rem; color: rgb(255 255 255 / 0.6); }
+.facts dd { margin: 0 0 0.7rem; font-size: 0.92rem; }
+.facts a { color: var(--gold); font-size: 0.9rem; }
+
+.section { padding: 3.5rem 0; }
+.split { display: grid; gap: 2.5rem; }
+.accordion { border-top: 1px solid var(--border); }
+.acc-btn {
+  width: 100%; text-align: left; background: none; border: 0;
+  border-bottom: 1px solid var(--border); padding: 1rem 0;
+  display: flex; justify-content: space-between; gap: 1rem; cursor: pointer;
+  font-size: 1rem;
+}
+.acc-btn .code { font-family: ui-monospace, monospace; font-size: 0.75rem; color: var(--primary); margin-right: 0.5rem; }
+.acc-panel { display: none; color: var(--muted-foreground); padding: 0 0 1rem; line-height: 1.6; }
+.acc-item.open .acc-panel { display: block; }
+.cards3 { display: grid; gap: 1rem; margin-top: 2rem; }
+.soft { background: color-mix(in oklch, var(--secondary) 60%, white); border-radius: 1rem; padding: 1.25rem; }
+.soft p { margin: 0.5rem 0 0; font-size: 0.92rem; line-height: 1.6; }
+.soft h3 { font-size: 1.25rem; margin: 0; }
+.link-list { list-style: none; margin: 0.8rem 0 0; padding: 0; display: grid; gap: 0.55rem; }
+.link-list a { color: var(--primary); }
+a.card { display: block; text-decoration: none; color: inherit; }
+
+.skills { background: var(--pine); color: white; scroll-margin-top: 5.5rem; }
+.skills .kicker { color: var(--gold); }
+.skills .intro { color: rgb(255 255 255 / 0.75); font-size: 0.95rem; line-height: 1.6; max-width: 40rem; }
+.skill-layout { display: grid; gap: 1rem; margin-top: 1.5rem; }
+.skill-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; }
+.skill-card {
+  display: flex; align-items: center; gap: 0.7rem;
+  text-align: left; cursor: pointer;
+  border-radius: 0.9rem; border: 1px solid rgb(255 255 255 / 0.16);
+  background: rgb(255 255 255 / 0.04); color: white;
+  padding: 0.75rem 0.8rem;
+}
+.skill-card:hover { border-color: rgb(255 255 255 / 0.4); }
+.skill-card[aria-pressed="true"] { background: var(--gold); color: var(--pine); border-color: var(--gold); }
+.skill-ico {
+  width: 2.25rem; height: 2.25rem; flex: none;
+  display: grid; place-items: center; border-radius: 0.65rem;
+  background: rgb(255 255 255 / 0.08);
+}
+.skill-card[aria-pressed="true"] .skill-ico { background: rgb(0 0 0 / 0.08); }
+.skill-ico svg { width: 1.25rem; height: 1.25rem; }
+.skill-card strong { display: block; font-size: 0.92rem; }
+.skill-card small { display: block; font-size: 0.75rem; opacity: 0.75; }
+.skill-detail {
+  background: white; color: var(--foreground);
+  border-radius: 1rem; padding: 1.25rem 1.3rem;
+  box-shadow: 0 16px 40px rgb(0 0 0 / 0.18);
+}
+.skill-detail h3 { font-size: 1.7rem; margin-top: 0.35rem; }
+.skill-detail p { line-height: 1.6; }
+.skill-points { margin: 0.4rem 0 0; padding: 0; list-style: none; display: grid; gap: 0.45rem; }
+.skill-points li { display: flex; gap: 0.5rem; font-size: 0.92rem; }
+.skill-points li::before { content: ""; width: 0.45rem; height: 0.45rem; margin-top: 0.45rem; border-radius: 99px; background: var(--gold); flex: none; }
+.lab { background: var(--pine); color: white; }
+.lab .kicker { color: var(--gold); }
+.lab-grid { display: grid; gap: 2rem; align-items: start; }
+.lab p.intro { color: rgb(255 255 255 / 0.75); font-size: 0.92rem; line-height: 1.6; }
+.aud { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.2rem; }
+.aud button {
+  border-radius: 999px; border: 1px solid rgb(255 255 255 / 0.2);
+  background: transparent; color: white; text-align: left; padding: 0.45rem 0.8rem; cursor: pointer;
+}
+.aud button[aria-pressed="true"] { background: var(--gold); color: var(--pine); border-color: var(--gold); }
+.aud small { display: block; font-size: 0.75rem; opacity: 0.7; }
+.check { display: flex; gap: 0.5rem; margin-top: 1rem; font-size: 0.92rem; color: rgb(255 255 255 / 0.85); }
+.panel { background: white; color: var(--foreground); border-radius: 1rem; padding: 1.25rem; box-shadow: 0 16px 40px rgb(0 0 0 / 0.18); }
+.panel-top { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; }
+.bars { display: flex; align-items: flex-end; gap: 0.35rem; height: 12rem; margin-top: 1rem; }
+.bars button { flex: 1; height: 100%; border: 0; background: none; padding: 0; cursor: pointer; display: flex; align-items: flex-end; }
+.bar { width: 100%; border-radius: 2px 2px 0 0; opacity: 0.85; }
+.bars button[aria-pressed="true"] .bar { opacity: 1; outline: 2px solid var(--pine); outline-offset: 2px; }
+.bar.heavy { background: var(--gold); }
+.bar.light { background: var(--primary); }
+.week-labels { display: flex; gap: 0.35rem; margin-top: 0.35rem; }
+.week-labels span { flex: 1; text-align: center; font-size: 0.65rem; color: var(--muted-foreground); }
+.legend { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.7rem; font-size: 0.75rem; color: var(--muted-foreground); }
+.swatch { width: 0.65rem; height: 0.65rem; display: inline-block; border-radius: 2px; margin-right: 0.3rem; vertical-align: middle; }
+.result { margin-top: 1.1rem; background: var(--cream); border-radius: 0.8rem; padding: 1rem; }
+.result .who { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted-foreground); margin: 0; }
+.result .copy { font-family: var(--display); font-size: 1.3rem; line-height: 1.3; white-space: pre-line; margin: 0.4rem 0 0; }
+
+.tabs { display: flex; gap: 0.5rem; overflow-x: auto; margin-top: 1.2rem; }
+.chip {
+  background: var(--card); color: var(--foreground);
+  box-shadow: inset 0 0 0 1px var(--border); white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+.chip svg { width: 1rem; height: 1rem; flex: none; }
+.tabs .chip:hover {
+  background-color: var(--cream);
+  box-shadow: inset 0 0 0 2px var(--primary);
+}
+.tabs .chip[aria-pressed="true"],
+.tabs .chip[aria-pressed="true"]:hover {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  box-shadow: none;
+}
+.chip:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.career {
+  margin-top: 1rem; background: var(--card); border-radius: 1rem; padding: 1.25rem;
+  box-shadow: 0 0 0 1px color-mix(in oklch, var(--foreground) 10%, transparent);
+  display: grid; gap: 1rem;
+}
+.course-list { background: color-mix(in oklch, var(--muted) 70%, white); border-radius: 0.8rem; padding: 1rem; }
+.course-list li { list-style: none; background: var(--background); border-radius: 0.4rem; padding: 0.45rem 0.7rem; margin-top: 0.45rem; font-size: 0.9rem; }
+.course-list ul { margin: 0; padding: 0; }
+
+.faq { background: var(--card); border-top: 1px solid var(--border); }
+.faq-head { display: flex; flex-direction: column; gap: 1rem; }
+.search {
+  height: 2.5rem; width: 100%; border-radius: 0.6rem; border: 1px solid var(--border);
+  background: var(--background); padding: 0 0.7rem;
+}
+.empty { margin-top: 1.5rem; border: 1px dashed var(--border); border-radius: 0.8rem; padding: 2rem 1rem; color: var(--muted-foreground); }
+
+.mix { display: flex; height: 3rem; border-radius: 0.8rem; overflow: hidden; box-shadow: inset 0 0 0 1px var(--border); margin-top: 0.4rem; }
+.mix button { border: 0; color: white; cursor: pointer; font-size: 0.75rem; }
+@media (max-width: 639px) { .mix .count { position: absolute; width: 1px; height: 1px; overflow: hidden; } }
+.mix button.elective { color: var(--pine); }
+.filters { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.8rem; }
+.filters button {
+  border-radius: 999px; background: transparent; cursor: pointer;
+  box-shadow: inset 0 0 0 1px var(--border); padding: 0.25rem 0.7rem; font-size: 0.75rem;
+  display: inline-flex; align-items: center; gap: 0.35rem;
+}
+.filters button[aria-pressed="true"] { background: var(--pine); color: white; }
+.dot { width: 0.5rem; height: 0.5rem; border-radius: 999px; display: inline-block; }
+.grid2 { display: grid; gap: 0.75rem; margin-top: 1.2rem; padding: 0; list-style: none; }
+.card {
+  width: 100%; text-align: left; background: var(--card); border: 0; border-radius: 1rem;
+  padding: 1rem; cursor: pointer;
+  box-shadow: 0 0 0 1px color-mix(in oklch, var(--foreground) 10%, transparent);
+}
+.card:hover { box-shadow: 0 0 0 1px color-mix(in oklch, var(--primary) 40%, transparent); }
+.card-top { display: flex; justify-content: space-between; gap: 0.5rem; align-items: center; }
+.badge { background: var(--secondary); border-radius: 999px; font-size: 0.72rem; padding: 0.1rem 0.45rem; }
+.card h3 { font-size: 1.25rem; margin-top: 0.45rem; }
+.card p { color: var(--muted-foreground); font-size: 0.9rem; line-height: 1.55; }
+
+.modal-back { position: fixed; inset: 0; background: rgb(0 0 0 / 0.35); z-index: 60; display: grid; place-items: center; padding: 1rem; }
+.modal {
+  width: min(36rem, 100%); background: var(--card); border-radius: 1rem; padding: 1.25rem 1.25rem 1.4rem;
+  position: relative; box-shadow: 0 20px 50px rgb(0 0 0 / 0.2);
+}
+.modal .x { position: absolute; top: 0.6rem; right: 0.7rem; }
+.modal p { line-height: 1.6; }
+
+.footer { margin-top: 4rem; background: var(--pine); color: white; }
+.footer-grid { display: grid; gap: 2rem; padding: 2.5rem 0; }
+.footer img { height: 3rem; width: auto; }
+.footer p { color: rgb(255 255 255 / 0.75); font-size: 0.92rem; line-height: 1.6; }
+.footer a { color: rgb(255 255 255 / 0.85); }
+.footer .label { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgb(255 255 255 / 0.6); }
+.footer ul { padding: 0; margin: 0.6rem 0 0; list-style: none; display: grid; gap: 0.4rem; font-size: 0.9rem; }
+.footer-bar { border-top: 1px solid rgb(255 255 255 / 0.1); font-size: 0.75rem; color: rgb(255 255 255 / 0.6); padding: 0.9rem 0; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+@media (min-width: 640px) {
+  .brand-sub { display: block; }
+  .brand img { height: 2.75rem; }
+  .faq-head { flex-direction: row; justify-content: space-between; align-items: end; }
+  .search { max-width: 18rem; }
+  .grid2 { grid-template-columns: 1fr 1fr; }
+  .week-labels span { font-size: 0.75rem; }
+}
+@media (min-width: 800px) {
+  .nav { display: flex; }
+  .menu-btn { display: none; }
+  .hero-grid { grid-template-columns: minmax(0, 1fr) 320px; align-items: start; }
+  .facts { position: sticky; top: 6rem; }
+  .split, .lab-grid, .skill-layout, .career, .footer-grid { grid-template-columns: 0.9fr 1.1fr; }
+  .skill-grid { grid-template-columns: 1fr; }
+  .cards3 { grid-template-columns: repeat(3, 1fr); }
+  .career { grid-template-columns: 1.2fr 0.8fr; }
+}
+
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script>
+window.SITE_DATA = {
+  "courses": [
+    {
+      "code": "CS 110",
+      "name": "Programming and Problem Solving",
+      "area": "CS",
+      "credits": "3",
+      "level": "Undergraduate",
+      "summary": "First programming course: break a problem into steps a computer can carry out.",
+      "detail": "Students start the degree by learning how to express a procedure clearly. The habit matters later, when a notebook has to show both the code and the reason it was written."
+    },
+    {
+      "code": "CS 115",
+      "name": "Object-Oriented Design",
+      "area": "CS",
+      "credits": "3",
+      "level": "Undergraduate",
+      "summary": "Organize larger programs around objects, interfaces, and responsibility.",
+      "detail": "Data work rarely stays a single script. This course is where students practise structuring code so a teammate can change one part without breaking the rest."
+    },
+    {
+      "code": "CS 165 or STAT 165",
+      "name": "Introduction to Programming with Python",
+      "area": "Joint",
+      "credits": "3",
+      "level": "Undergraduate",
+      "summary": "Python as the shared language of the data science courses.",
+      "detail": "The same course can be taken as computer science or statistics. That cross-listing is the degree in miniature: one toolkit, two departments."
+    },
+    {
+      "code": "CS 210",
+      "name": "Data Structures and Abstractions",
+      "area": "CS",
+      "credits": "3",
+      "level": "Undergraduate",
+      "summary": "How data is stored, and what that choice costs in time and memory.",
+      "detail": "Stacks, queues, trees, hashing, recursion, and asymptotic notation. The point for a data scientist is practical: the way a table is organized changes what questions you can afford to ask."
+    },
+    {
+      "code": "CS 220",
+      "name": "Theoretical Foundations",
+      "area": "CS",
+      "credits": "3",
+      "level": "Undergraduate",
+      "summary": "The mathematical ideas underneath computation.",
+      "detail": "A short course in the theory that later algorithm and learning courses assume. It is less about a tool and more about knowing what a computer cannot magically skip."
+    },
+    {
+      "code": "CS 261 or MATH 261",
+      "name": "Methods in Numerical Analysis",
+      "area": "Joint",
+      "credits": "3",
+      "level": "Undergraduate",
+      "summary": "Approximate answers, and how much error those approximations carry.",
+      "detail": "Real measurements are messy and many formulas do not have a tidy closed form. Numerical methods are how a program still produces a usable number, with the error kept in view."
+    },
+    {
+      "code": "CS 265",
+      "name": "Introduction to Data Science",
+      "area": "CS",
+      "credits": "3",
+      "level": "Undergraduate",
+      "summary": "The first course that treats data science as its own practice.",
+      "detail": "Students meet the lifecycle they will use for the rest of the degree: find data, prepare it, look at it, model it, and say what the result supports."
+    },
+    {
+      "code": "CS 320",
+      "name": "Introduction to Artificial Intelligence",
+      "area": "CS",
+      "credits": "3",
+      "level": "Undergraduate",
+      "summary": "Search, reasoning, and the first pass at machine learning.",
+      "detail": "Problem spaces, uninformed and heuristic search, games, constraint satisfaction, and a comparison of logic-based, fuzzy, and probabilistic reasoning. Machine learning appears as one family of methods, including over-fitting and accuracy, not as the whole subject."
+    },
+    {
+      "code": "CS 321",
+      "name": "Machine Learning",
+      "area": "CS",
+      "credits": "3",
+      "level": "Undergraduate",
+      "summary": "Models that learn patterns, and the checks that keep them honest.",
+      "detail": "Follows the artificial intelligence course with a fuller treatment of learning methods students will later meet again in statistical learning."
+    },
+    {
+      "code": "CS 340",
+      "name": "Advanced Data Structures and Algorithm Design",
+      "area": "CS",
+      "credits": "3",
+      "level": "Undergraduate",
+      "summary": "Graph algorithms, strategy, and the cost of a method.",
+      "detail": "Traversals, pattern matching, greedy methods, divide-and-conquer, dynamic programming, and the basics of parallel algorithms. Useful when a dataset is large enough that a careless loop is not a plan."
+    },
+    {
+      "code": "CS 365",
+      "name": "Data Wrangling",
+      "area": "CS",
+      "credits": "3",
+      "level": "Undergraduate",
+      "summary": "Turn messy source data into a table you are willing to analyze.",
+      "detail": "Most of a real project is spent here: missing values, odd formats, joins that do not quite match, and a record of what was changed. A result that skips this step is hard to defend."
+    },
+    {
+      "code": "CS 375",
+      "name": "Database and Information Retrieval",
+      "area": "CS",
+      "credits": "3",
+      "level": "Undergraduate",
+      "summary": "Store data so it can be queried, not just opened.",
+      "detail": "Conceptual and relational modelling, query languages, transactions, and retrieval. The course sits under every later project that starts from more than one spreadsheet."
+    },
+    {
+      "code": "CS 465",
+      "name": "Data Mining",
+      "area": "CS",
+      "credits": "3",
+      "level": "Undergraduate",
+      "summary": "Find patterns: classes, clusters, and the odd points that are not noise.",
+      "detail": "Knowledge discovery, preparation, warehousing, pattern mining, classification, regression, clustering, and outlier detection. The emphasis is on getting a pattern out of data you did not design."
+    },
+    {
+      "code": "MATH 110",
+      "name": "Calculus I",
+      "area": "MATH",
+      "credits": "3",
+      "level": "Undergraduate",
+      "summary": "Rates of change, the language of many learning methods.",
+      "detail": "Gradients and optimization later in the degree are calculus with a dataset attached. This is the first pass."
+    },
+    {
+      "code": "MATH 111",
+      "name": "Calculus II",
+      "area": "MATH",
+      "credits": "3",
+      "level": "Undergraduate",
+      "summary": "Integration and series, still in service of later modelling.",
+      "detail": "Builds the calculus used when a model is defined as an area, an accumulated error, or an infinite process you cut off on purpose."
+    },
+    {
+      "code": "MATH 122",
+      "name": "Linear Algebra I",
+      "area": "MATH",
+      "credits": "3",
+      "level": "Undergraduate",
+      "summary": "Vectors, matrices, and the shape of high-dimensional data.",
+      "detail": "A table with many columns is a linear-algebra object. Regression, dimensionality reduction, and several machine-learning methods assume this course."
+    },
+    {
+      "code": "MATH 221",
+      "name": "Introduction to Proofs and Problem Solving",
+      "area": "MATH",
+      "credits": "3",
+      "level": "Undergraduate",
+      "summary": "Say why a statement follows, not only that a calculation ran.",
+      "detail": "Proof is communication with a strict audience. The course trains the same habit the degree asks for in a written result: claim, then justification."
+    },
+    {
+      "code": "STAT 160",
+      "name": "Introductory Statistics",
+      "area": "STAT",
+      "credits": "3",
+      "level": "Undergraduate",
+      "summary": "Variation, summaries, and the idea that a sample is not the population.",
+      "detail": "The first statistics course. Everything later about confidence and prediction rests on being willing to say how much a number might move."
+    },
+    {
+      "code": "STAT 251 or MATH 251",
+      "name": "Introduction to Probability",
+      "area": "Joint",
+      "credits": "3",
+      "level": "Undergraduate",
+      "summary": "Chance as a formal language.",
+      "detail": "Distributions and probability rules used by inference and by machine learning. Cross-listed so mathematics and statistics students share the same foundation."
+    },
+    {
+      "code": "STAT 252",
+      "name": "Introduction to Statistical Inference",
+      "area": "STAT",
+      "credits": "3",
+      "level": "Undergraduate",
+      "summary": "Estimation, tests, and what a sample lets you conclude.",
+      "detail": "Moves from describing a table to making a claim about a wider group, with the assumptions written down."
+    },
+    {
+      "code": "STAT 300",
+      "name": "Statistical Learning and Predictive Modelling",
+      "area": "STAT",
+      "credits": "3",
+      "level": "Undergraduate",
+      "summary": "Prediction from the statistics side of the house.",
+      "detail": "Pairs with the computer science machine-learning course. Same family of problems, with more attention to the statistical behaviour of the fit."
+    },
+    {
+      "code": "STAT 301",
+      "name": "Introduction to Statistical Computing",
+      "area": "STAT",
+      "credits": "3",
+      "level": "Undergraduate",
+      "summary": "Do the statistics in code, and keep the analysis repeatable.",
+      "detail": "A bridge between the formula and the script. Useful once a method is too tedious, or too easy to mis-copy, by hand."
+    },
+    {
+      "code": "STAT 354",
+      "name": "Linear Statistical Models",
+      "area": "STAT",
+      "credits": "3",
+      "level": "Undergraduate",
+      "summary": "Regression and related linear models, with diagnostics.",
+      "detail": "The workhorse model for a great many applied questions. The course is where students learn to notice a fit that looks neat and is still the wrong story."
+    },
+    {
+      "code": "STAT 418",
+      "name": "Time Series Analysis and Forecasting",
+      "area": "STAT",
+      "credits": "3",
+      "level": "Undergraduate",
+      "summary": "Data that arrives in order, where yesterday is not independent of today.",
+      "detail": "Forecasting methods for series such as weather, demand, or prices. Ordinary regression assumptions fail here, so the course exists."
+    },
+    {
+      "code": "CS 496 or STAT 496",
+      "name": "Data Science Capstone",
+      "area": "Joint",
+      "credits": "3",
+      "level": "Undergraduate",
+      "summary": "A full project, from question to a result someone else can use.",
+      "detail": "The degree ends by asking students to carry one problem across the lifecycle and present it. Either department can host the course."
+    },
+    {
+      "code": "CS 700",
+      "name": "Software Development Fundamentals",
+      "area": "CS",
+      "credits": "3",
+      "level": "Graduate",
+      "summary": "Modern development practice for the professional master’s.",
+      "detail": "Testing, source control, teamwork, and current languages and tools. Shared with the department’s other professionally focused master’s stream. Taken in the first fall semester."
+    },
+    {
+      "code": "CS 710",
+      "name": "Python and Data Fundamentals",
+      "area": "CS",
+      "credits": "3",
+      "level": "Graduate",
+      "summary": "Data-centred Python, from tables to SQL and NoSQL.",
+      "detail": "Object-oriented Python, data modelling, and libraries such as Pandas, NumPy, SciPy, and scikit-learn, plus relational and non-relational databases. First semester, with CS 700."
+    },
+    {
+      "code": "CS 711",
+      "name": "Foundations of Data Science",
+      "area": "CS",
+      "credits": "3",
+      "level": "Graduate",
+      "summary": "The lifecycle, including ethics, evaluation, and delivery.",
+      "detail": "Discovery, preparation, model planning, implementation, evaluation, visualization, and delivery. Winter of the first year."
+    },
+    {
+      "code": "CS 712",
+      "name": "Foundations of Statistics and Machine Learning",
+      "area": "CS",
+      "credits": "3",
+      "level": "Graduate",
+      "summary": "The statistical basis under common learning methods.",
+      "detail": "Distributions, sampling, hypothesis tests, Bayes, maximum likelihood, linear and kernel methods, dimension reduction, ensembles, and neural networks."
+    },
+    {
+      "code": "CS 713",
+      "name": "Applied Machine Learning",
+      "area": "CS",
+      "credits": "3",
+      "level": "Graduate",
+      "summary": "Methods on real problem types, from forecasting to language.",
+      "detail": "Classification, regression, clustering, forests, deep learning, recognition, anomaly detection, and natural language tasks. Spring or summer."
+    },
+    {
+      "code": "CS 714",
+      "name": "Big Data Analytics and Cloud Computing",
+      "area": "CS",
+      "credits": "3",
+      "level": "Graduate",
+      "summary": "Scale the analysis, and do it on a cloud platform.",
+      "detail": "Containers, distributed files, MapReduce-style processing, and a milestone project on a cloud platform such as Azure, AWS, or Google Cloud."
+    },
+    {
+      "code": "CS 715",
+      "name": "Advanced Data Science and Machine Learning",
+      "area": "CS",
+      "credits": "3",
+      "level": "Graduate",
+      "summary": "A current method, used on a project of the student’s choosing.",
+      "detail": "Topics can include reinforcement learning, deep learning, spatio-temporal forecasting, or language models. Second fall semester."
+    },
+    {
+      "code": "CS 716",
+      "name": "Communication in Data Science",
+      "area": "CS",
+      "credits": "3",
+      "level": "Graduate",
+      "summary": "Say what the project found, in more than one form.",
+      "detail": "Communication and visualization fundamentals, notebooks, and visualization libraries. The course asks for four modes: a structured abstract, a poster, a project notebook, and an oral presentation. This website is part of the work for that course."
+    },
+    {
+      "code": "CS 718",
+      "name": "Data Science Seminar",
+      "area": "CS",
+      "credits": "0",
+      "level": "Graduate",
+      "summary": "A professional seminar series, not a content course.",
+      "detail": "Entrepreneurship, ethics, intellectual property, innovation, start-up culture, and equity, diversity, and inclusion. Zero credit hours, taken with the capstone."
+    },
+    {
+      "code": "CS 719",
+      "name": "Data Science Project",
+      "area": "CS",
+      "credits": "6",
+      "level": "Graduate",
+      "summary": "The master’s capstone, shown in public.",
+      "detail": "A milestone project for the data science stream. Final work is demonstrated and presented in a public venue. Six credit hours."
+    }
+  ],
+  "winterWeeks": [
+    {
+      "id": 1,
+      "label": "Nov 4",
+      "snow": 1.2,
+      "collisions": 14
+    },
+    {
+      "id": 2,
+      "label": "Nov 11",
+      "snow": 0.4,
+      "collisions": 11
+    },
+    {
+      "id": 3,
+      "label": "Nov 18",
+      "snow": 6.5,
+      "collisions": 19
+    },
+    {
+      "id": 4,
+      "label": "Nov 25",
+      "snow": 14,
+      "collisions": 27
+    },
+    {
+      "id": 5,
+      "label": "Dec 2",
+      "snow": 3.1,
+      "collisions": 16
+    },
+    {
+      "id": 6,
+      "label": "Dec 9",
+      "snow": 18.4,
+      "collisions": 31
+    },
+    {
+      "id": 7,
+      "label": "Dec 16",
+      "snow": 9.2,
+      "collisions": 22
+    },
+    {
+      "id": 8,
+      "label": "Jan 6",
+      "snow": 2,
+      "collisions": 15
+    },
+    {
+      "id": 9,
+      "label": "Jan 13",
+      "snow": 21.5,
+      "collisions": 34
+    },
+    {
+      "id": 10,
+      "label": "Jan 20",
+      "snow": 7.8,
+      "collisions": 20
+    },
+    {
+      "id": 11,
+      "label": "Jan 27",
+      "snow": 0.8,
+      "collisions": 12
+    },
+    {
+      "id": 12,
+      "label": "Feb 3",
+      "snow": 12.6,
+      "collisions": 26
+    }
+  ],
+  "careers": [
+    {
+      "id": "insurance",
+      "sector": "Insurance",
+      "role": "Pricing and claims analyst",
+      "employer": "SGI is one employer the faculty names",
+      "blurb": "Insurers already hold large administrative datasets. The useful graduate is the person who can clean a claims extract, fit a careful model, and tell a non-statistician what not to conclude.",
+      "icon": "<path d=\"M12 3 5 6v6c0 4 3 6.5 7 8 4-1.5 7-4 7-8V6z\"/>",
+      "courses": {
+        "Undergraduate": [
+          {"code": "STAT 354", "fit": "Linear statistical models. The checklist course for regression, which is how a price or a claim size is related to the factors you can measure."},
+          {"code": "STAT 252", "fit": "Statistical inference. Estimation and tests: what a sample of claims lets you say about the wider book."},
+          {"code": "CS 365", "fit": "Data wrangling. Claims extracts arrive messy. This is the required course on cleaning and joining them."},
+          {"code": "CS 375", "fit": "Databases and information retrieval. Administrative records live in tables you query, which this required course covers."},
+          {"code": "CS 465", "fit": "Data mining. The published topics include classification, regression, and outlier detection, the pattern work behind a claims review."}
+        ],
+        "Graduate": [
+          {"code": "CS 712", "fit": "Foundations of statistics and machine learning. Distributions, hypothesis tests, and linear regression, the statistical basis for a pricing model."},
+          {"code": "CS 713", "fit": "Applied machine learning. Classification and anomaly detection are published topics, which is the closest course work to sorting claims."},
+          {"code": "CS 711", "fit": "Foundations of data science. Preparation, evaluation, and delivery of a model, not only the fit."},
+          {"code": "CS 716", "fit": "Communication in data science. The course requires an abstract, a poster, a notebook, and an oral explanation for someone who did not build the model."}
+        ]
+      }
+    },
+    {
+      "id": "agriculture",
+      "sector": "Agriculture finance",
+      "role": "Data analyst",
+      "employer": "Farm Credit Canada is one employer the faculty names",
+      "blurb": "Lending and farm operations produce seasonal series. Time-series work and clear reporting matter as much as a clever classifier.",
+      "icon": "<path d=\"M12 22V10\"/><path d=\"M12 10c-2-3-6-3-6 0 3 0 6-1 6-4 0 3 3 4 6 4-2 3-4 3-6 0z\"/>",
+      "courses": {
+        "Undergraduate": [
+          {"code": "STAT 418", "fit": "Time series and forecasting. The course exists for data that arrives in order, such as prices, demand, or weather."},
+          {"code": "STAT 300", "fit": "Statistical learning and predictive modelling. The statistics department’s course on prediction."},
+          {"code": "STAT 354", "fit": "Linear statistical models. A required regression course for relating an outcome to the factors a lender can observe."},
+          {"code": "CS 365", "fit": "Data wrangling. Seasonal files from different systems have to be joined before a forecast means anything."},
+          {"code": "MATH 122", "fit": "Linear algebra. Required, and it is the language under the regression and learning courses above."}
+        ],
+        "Graduate": [
+          {"code": "CS 713", "fit": "Applied machine learning. Time-series forecasting is one of the published topics."},
+          {"code": "CS 712", "fit": "Foundations of statistics and machine learning. Linear regression and the sampling ideas under a credit or yield model."},
+          {"code": "CS 710", "fit": "Python and data fundamentals. Tables, Pandas, SQL, and the extract-transform-load work that gets farm or loan files into one place."},
+          {"code": "CS 715", "fit": "Advanced data science and machine learning. Spatio-temporal forecasting is one topic the department says the course may cover."}
+        ]
+      }
+    },
+    {
+      "id": "energy",
+      "sector": "Energy",
+      "role": "Operations analyst",
+      "employer": "SaskEnergy is one employer the faculty names",
+      "blurb": "Demand, weather, and maintenance logs do not share a format. Wrangling and databases are the daily work; a forecast is the occasional product.",
+      "icon": "<path d=\"M13 2 4 14h7l-1 8 9-12h-7z\"/>",
+      "courses": {
+        "Undergraduate": [
+          {"code": "STAT 418", "fit": "Time series and forecasting. Demand is an ordered series, which is the subject of this required course."},
+          {"code": "CS 365", "fit": "Data wrangling. Logs and meter files do not arrive in one shape. Cleaning them is a required course."},
+          {"code": "CS 375", "fit": "Databases and information retrieval. Operations data is queried, not copied out of a spreadsheet."},
+          {"code": "CS 261 or MATH 261", "fit": "Numerical analysis. Approximate answers and the error they carry, for calculations that do not have a tidy closed form."},
+          {"code": "CS 340", "fit": "Advanced data structures and algorithms. The program page lists this for when a dataset is large enough that the method’s cost matters."}
+        ],
+        "Graduate": [
+          {"code": "CS 714", "fit": "Big data analytics and cloud computing. Distributed processing and a milestone project on a cloud platform."},
+          {"code": "CS 713", "fit": "Applied machine learning. Time-series forecasting is a published topic, which is the course fit for demand."},
+          {"code": "CS 710", "fit": "Python and data fundamentals. ETL, SQL, and NoSQL, the intake step for logs that do not share a format."},
+          {"code": "CS 711", "fit": "Foundations of data science. The lifecycle from preparation through evaluation and delivery."}
+        ]
+      }
+    },
+    {
+      "id": "public",
+      "sector": "Public sector",
+      "role": "Policy analyst with a quantitative brief",
+      "employer": "Government and public agencies",
+      "blurb": "A ministry audience needs a short claim, the comparison that supports it, and the caveat. The faculty names government alongside the companies above.",
+      "icon": "<path d=\"M4 20h16\"/><path d=\"M6 20V10h12v10\"/><path d=\"M4 10h16L12 4z\"/>",
+      "courses": {
+        "Undergraduate": [
+          {"code": "STAT 252", "fit": "Statistical inference. How to turn a sample into a claim, with the assumptions written down."},
+          {"code": "STAT 160", "fit": "Introductory statistics. Variation and the idea that a sample is not the whole population."},
+          {"code": "CS 265", "fit": "Introduction to data science. The department’s course on the lifecycle, including the communication skills data scientists use."},
+          {"code": "MATH 221", "fit": "Proofs and problem solving. Practice at saying why a statement follows, not only that a number appeared."},
+          {"code": "CS 375", "fit": "Databases and information retrieval. Public records are stored so a question can be asked of them."}
+        ],
+        "Graduate": [
+          {"code": "CS 716", "fit": "Communication in data science. Four required modes: a structured abstract, a poster, a notebook, and an oral presentation."},
+          {"code": "CS 711", "fit": "Foundations of data science. Data ethics, visualization, and delivery are published topics."},
+          {"code": "CS 718", "fit": "Data science seminar. A professional series that includes ethics, intellectual property, and equity, diversity, and inclusion."},
+          {"code": "CS 719", "fit": "Data science project. The capstone is demonstrated and presented in a public venue."}
+        ]
+      }
+    },
+    {
+      "id": "consulting",
+      "sector": "Consulting",
+      "role": "Analytics consultant",
+      "employer": "Deloitte is one employer the faculty names",
+      "blurb": "Consulting rewards people who can scope a question, pick a method they can explain, and leave a client with a result they will not misuse.",
+      "icon": "<rect x=\"3\" y=\"7\" width=\"18\" height=\"13\" rx=\"2\"/><path d=\"M8 7V5a4 4 0 0 1 8 0v2\"/>",
+      "courses": {
+        "Undergraduate": [
+          {"code": "CS 496 or STAT 496", "fit": "Data science capstone. A full project, from the question to a result someone else can use. Either department can host it."},
+          {"code": "CS 465", "fit": "Data mining. Pattern mining, classification, and clustering on data you did not design."},
+          {"code": "CS 320", "fit": "Introduction to artificial intelligence. Search, reasoning, and a first pass at learning, including over-fitting and accuracy."},
+          {"code": "STAT 300", "fit": "Statistical learning and predictive modelling. The same family of problems from the statistics side."},
+          {"code": "CS 365", "fit": "Data wrangling. Most of a client file is preparation before any model is honest."}
+        ],
+        "Graduate": [
+          {"code": "CS 719", "fit": "Data science project. A milestone capstone, demonstrated and presented in public."},
+          {"code": "CS 716", "fit": "Communication in data science. The four modes a client actually sees: abstract, poster, notebook, and a spoken briefing."},
+          {"code": "CS 713", "fit": "Applied machine learning. Methods on real problem types, from classification to forecasting and language."},
+          {"code": "CS 714", "fit": "Big data analytics and cloud computing. A milestone project on Azure, AWS, Google Cloud, or another platform."}
+        ]
+      }
+    }
+  ],
+  "faqs": [
+    {
+      "id": "difference",
+      "question": "How is this different from the Bachelor of Science in Computer Science?",
+      "answer": "Computer science at Regina is a broad computing degree, and its honours and major programs are accredited by the Computer Science Accreditation Council. Data science is a separate four-year degree aimed at drawing conclusions from data. It is jointly offered by Computer Science and Mathematics and Statistics, with a fixed mix of those subjects rather than a general computing major."
+    },
+    {
+      "id": "transfer",
+      "question": "Can I transfer into the program?",
+      "answer": "Yes, from another University of Regina program or from another college or university, if you meet Faculty of Science admission requirements. Confirm the current rules with academic advising. This course site is not the registrar."
+    },
+    {
+      "id": "scholarships",
+      "question": "Are there scholarships?",
+      "answer": "Students can be considered for Faculty of Science, Computer Science, and Mathematics and Statistics awards. The program page names the Deloitte Bursary in Information Technology and the Peter J. Puckall Memorial Bursary. Other awards are listed in the university’s Student Awards Management System."
+    },
+    {
+      "id": "clubs",
+      "question": "What student groups are there?",
+      "answer": "The Faculty of Science and both sponsoring departments have student societies that host events. Campus clubs open to all University of Regina students are available as well."
+    },
+    {
+      "id": "msc-options",
+      "question": "What is the difference between a thesis, a project, and a course-based master’s?",
+      "answer": "The department describes three shapes. A thesis is five classes, two seminar presentations, and a thesis reporting an attempt at original research, and it is the route they recommend toward a Ph.D. A project is seven classes, two seminars, and a shorter report that is not necessarily original research. The course option is ten classes, including a capstone, and it is the professionally focused path. Data science on this site is that course option."
+    },
+    {
+      "id": "english",
+      "question": "Is there an English language requirement?",
+      "answer": "The language of instruction is English. The department’s undergraduate FAQ says every applicant must show a suitable level of English, and it points to the university’s English Language Proficiency Requirements."
+    },
+    {
+      "id": "advisor",
+      "question": "How do I meet an academic advisor?",
+      "answer": "The department points undergraduates to the Science Academic Hub. Graduate questions go to the Faculty of Graduate Studies and Research and to the department’s graduate pages."
+    },
+    {
+      "id": "average",
+      "question": "What average do I need?",
+      "answer": "The department’s undergraduate FAQ says the minimum average for the Computer Science major is set each year. Through Spring/Summer 2025 it was 70%. From the Fall 2025 intake, until further notice, it is 80%. That sentence is about the Computer Science major. Confirm the figure for data science with the Faculty of Science before you apply."
+    }
+  ],
+  "sources": [
+    {
+      "label": "University of Regina, Data Science (bachelor’s program page)",
+      "href": "https://www.uregina.ca/academics/programs/science/data-science.html"
+    },
+    {
+      "label": "University of Regina, B.Sc. in Data Science checklist",
+      "href": "https://www.uregina.ca/science/computer-science/undergraduate-programs/bsc-data-science.html"
+    },
+    {
+      "label": "University of Regina, MSc in Computer Science – Data Science",
+      "href": "https://www.uregina.ca/science/computer-science/graduate-programs/msc-cs-data-science.html"
+    },
+    {
+      "label": "Department of Computer Science",
+      "href": "https://www.uregina.ca/science/computer-science/index.html"
+    },
+    {
+      "label": "Undergraduate programs",
+      "href": "https://www.uregina.ca/science/computer-science/undergraduate-programs/index.html"
+    },
+    {
+      "label": "Graduate programs",
+      "href": "https://www.uregina.ca/science/computer-science/graduate-programs/index.html"
+    },
+    {
+      "label": "Student resources",
+      "href": "https://www.uregina.ca/science/computer-science/student-resources/index.html"
+    }
+  ]
+};
+
+const DATA = window.SITE_DATA;
+
+const featuredByLevel = {
+  Undergraduate: ["CS 210", "CS 265", "CS 320", "CS 340", "CS 375", "CS 465", "STAT 300", "CS 496 or STAT 496"],
+  Graduate: ["CS 700", "CS 710", "CS 711", "CS 712", "CS 713", "CS 714", "CS 715", "CS 716", "CS 718", "CS 719"],
+};
+let programLevel = "Undergraduate";
+const facts = {
+  Undergraduate: [
+    ["Program", "Bachelor of Science in Data Science"],
+    ["Length", "4 years · 40 courses"],
+    ["Offered by", "Computer Science and Mathematics & Statistics"],
+    ["Also through", "Campion, First Nations University of Canada, Luther College"],
+    ["Faculty", "Faculty of Science"],
+    ["Distinctive", "The only undergraduate data science degree in Saskatchewan"],
+  ],
+  Graduate: [
+    ["Program", "MSc in Computer Science (Data Science), course-based"],
+    ["Length", "30 credits, about two years"],
+    ["Offered by", "Department of Computer Science"],
+    ["Ends with", "Seminar (CS 718) and a public project (CS 719)"],
+    ["Status", "Admission temporarily suspended"],
+    ["Co-op", "A co-op designation may be added"],
+  ],
+};
+function pageFromHash() {
+  if (location.hash === "#curriculum") return "curriculum";
+  return "home";
+}
+let page = pageFromHash();
+
+function esc(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
+function header() {
+  return `
+    <header class="header">
+      <div class="wrap header-inner">
+        <a class="brand" href="#program" data-nav="home">
+          <img src="ur-logo.png" alt="University of Regina">
+          <span class="brand-sub">Faculty of Science<span style="display:block">Department of Computer Science</span></span>
+        </a>
+        <nav class="nav" aria-label="Primary">
+          <a href="#program" data-nav="home" ${page === "home" ? 'aria-current="page"' : ""}>Program</a>
+          <a href="#curriculum" data-nav="curriculum" ${page === "curriculum" ? 'aria-current="page"' : ""}>Courses</a>
+        </nav>
+        <button class="menu-btn" type="button" aria-label="Open menu">☰</button>
+      </div>
+    </header>
+    <div class="sheet-back" hidden></div>
+    <aside class="sheet" hidden>
+      <header>
+        <strong class="display" style="font-size:1.2rem">Data Science</strong>
+        <button class="icon-btn sheet-close" type="button" aria-label="Close menu">×</button>
+      </header>
+      <a href="#program" data-nav="home">Program</a>
+      <a href="#curriculum" data-nav="curriculum">Courses</a>
+    </aside>`;
+}
+
+function footer() {
+  const links = DATA.sources
+    .map((source) => `<li><a href="${esc(source.href)}">${esc(source.label)}</a></li>`)
+    .join("");
+  return `
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <img src="ur-logo.png" alt="University of Regina">
+          <p>Department of Computer Science, Faculty of Science. Program details on this site are summarized from the University of Regina pages linked here. Confirm anything that affects an application with the faculty.</p>
+        </div>
+        <div>
+          <p class="label">Official pages</p>
+          <ul>${links}</ul>
+        </div>
+      </div>
+      <div class="wrap footer-bar"><p>Faculty of Science, University of Regina.</p></div>
+    </footer>`;
+}
+
+function homeHtml() {
+  return `
+    <section class="section" id="department">
+      <div class="wrap split">
+        <div>
+          <p class="crumbs">U of R / Faculty of Science / Computer Science</p>
+          <h1>Computer Science</h1>
+          <p class="muted" style="line-height:1.6">The department teaches computing: how it works, how software is built, and where it is used. Data science is one subject inside that work. The bachelor’s is shared with Mathematics and Statistics. The master’s is a course sequence in this department.</p>
+        </div>
+        <div class="soft">
+          <p class="kicker">Quicklinks for students</p>
+          <ul class="link-list">
+            <li><a href="#curriculum" data-nav="curriculum">Courses in data science</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <section class="hero" id="choice">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="kicker">This subject</p>
+          <h2>Data Science</h2>
+          <div class="pills" role="group" aria-label="Program level">
+            <button class="pill" type="button" data-level="Undergraduate" aria-pressed="true">Bachelor of Science</button>
+            <button class="pill" type="button" data-level="Graduate" aria-pressed="false">Master of Science</button>
+          </div>
+          <div class="lead" id="level-copy"></div>
+        </div>
+        <aside class="facts">
+          <p class="kicker" style="color:var(--gold)">Quick facts</p>
+          <dl id="facts"></dl>
+          <a id="official" href="https://www.uregina.ca/academics/programs/science/data-science.html">Official program page</a>
+        </aside>
+      </div>
+    </section>
+    <section class="section" id="courses">
+      <div class="wrap split">
+        <div>
+          <p class="kicker">The list</p>
+          <h2 id="courses-title"></h2>
+          <p class="muted" id="courses-copy" style="line-height:1.6"></p>
+          <a class="btn outline" href="#curriculum" data-nav="curriculum" style="margin-top:1rem">Open the full checklist</a>
+        </div>
+        <div class="accordion" id="featured"></div>
+      </div>
+    </section>
+    <section class="skills" id="skills">
+      <div class="wrap section">
+        <p class="kicker">Skills</p>
+        <h2 style="color:white">What you can do with data</h2>
+        <p class="intro">Six skills sit under the degree. Pick one to read what it means when you are working with data.</p>
+        <div class="skill-layout">
+          <div class="skill-grid" id="skill-grid" role="list"></div>
+          <div class="skill-detail" id="skill-detail"></div>
+        </div>
+      </div>
+    </section>
+    <section class="section" id="careers">
+      <div class="wrap">
+        <p class="kicker">After the degree</p>
+        <h2>Where the faculty says this leads</h2>
+        <p class="muted lead">SGI, Farm Credit Canada, Deloitte, and SaskEnergy are the employers named on the program page. Pick a sector. The courses follow the degree selected above, and each fit is a reading of that course’s published topics. It is not a placement list.</p>
+        <div class="tabs" id="sectors" role="tablist" aria-label="Sectors"></div>
+        <div class="career" id="career" role="tabpanel"></div>
+      </div>
+    </section>
+    <section class="faq section" id="questions">
+      <div class="wrap">
+        <div class="faq-head">
+          <div>
+            <p class="kicker">Questions</p>
+            <h2>Before you treat this as an offer</h2>
+          </div>
+          <label>Search questions<span class="sr"> </span>
+            <input class="search" id="faq-search" placeholder="Search questions">
+          </label>
+        </div>
+        <div id="faq-list"></div>
+      </div>
+    </section>`;
+}
+
+function curriculumHtml() {
+  return `
+    <div class="wrap section">
+      <p class="crumbs">U of R / Faculty of Science / Computer Science / Courses</p>
+      <h1>The checklist, as something you can filter</h1>
+      <p class="muted lead" id="curr-lead"></p>
+      <div class="pills">
+        <button class="pill" type="button" data-level="Undergraduate" aria-pressed="true">B.Sc. checklist</button>
+        <button class="pill ghost" type="button" data-level="Graduate" aria-pressed="false">M.Sc. curriculum</button>
+      </div>
+      <label style="display:block;margin-top:1.2rem;max-width:28rem">
+        <span class="sr">Search courses</span>
+        <input class="search" id="course-search" placeholder="Search by code or topic" style="background:var(--card)">
+      </label>
+      <div id="course-results"></div>
+    </div>`;
+}
+
+
+function boot() {
+const app = document.getElementById("app");
+app.innerHTML = header() + (page === "home" ? homeHtml() : curriculumHtml()) + footer();
+
+const menuBtn = document.querySelector(".menu-btn");
+const sheet = document.querySelector(".sheet");
+const sheetBack = document.querySelector(".sheet-back");
+function closeMenu() {
+  sheet.hidden = true;
+  sheetBack.hidden = true;
+}
+menuBtn.addEventListener("click", () => {
+  sheet.hidden = false;
+  sheetBack.hidden = false;
+});
+sheetBack.addEventListener("click", closeMenu);
+document.querySelector(".sheet-close").addEventListener("click", closeMenu);
+
+function bindAccordion(root) {
+  root.querySelectorAll(".acc-btn").forEach((button) => {
+    button.addEventListener("click", () => {
+      const item = button.parentElement;
+      const open = item.classList.contains("open");
+      root.querySelectorAll(".acc-item").forEach((node) => {
+        node.classList.remove("open");
+        const trigger = node.querySelector(".acc-btn");
+        trigger.setAttribute("aria-expanded", "false");
+        trigger.lastElementChild.textContent = "▾";
+      });
+      if (!open) {
+        item.classList.add("open");
+        button.setAttribute("aria-expanded", "true");
+        button.lastElementChild.textContent = "▴";
+      }
+    });
+  });
+}
+
+if (page === "home") {
+  const copy = document.getElementById("level-copy");
+  const factsList = document.getElementById("facts");
+  const official = document.getElementById("official");
+  function renderFeatured(level) {
+    const title = document.getElementById("courses-title");
+    const blurb = document.getElementById("courses-copy");
+    const codes = featuredByLevel[level];
+    if (level === "Undergraduate") {
+      title.textContent = "Courses in the bachelor’s";
+      blurb.textContent = "This column is a selection, not the whole degree. The program page uses data structures, artificial intelligence, algorithms, databases, and data mining as its examples. The required list adds an introduction to data science, statistical learning, and a capstone that either Computer Science or Statistics can host. Open a course to read what it covers. Every required code is on the Courses page.";
+    } else {
+      title.textContent = "Courses in the master’s";
+      blurb.textContent = "This column is the whole required curriculum, not a sample. The department teaches it in order: two courses in the first fall, two in the winter, two in the spring or summer, two more the next fall, then the seminar and the project in the last winter. Open a course to read what that step covers.";
+    }
+    const root = document.getElementById("featured");
+    root.innerHTML = codes
+      .map((code) => {
+        const course = DATA.courses.find((item) => item.code === code);
+        const open = code === codes[0];
+        return `<div class="acc-item ${open ? "open" : ""}"><button class="acc-btn" type="button" aria-expanded="${open}"><span><span class="code">${esc(course.code)}</span>${esc(course.name)}</span><span aria-hidden="true">${open ? "▴" : "▾"}</span></button><div class="acc-panel">${esc(course.detail)}</div></div>`;
+      })
+      .join("");
+    bindAccordion(root);
+  }
+  function setLevel(level) {
+    programLevel = level;
+    document.querySelectorAll(".hero [data-level]").forEach((button) => {
+      button.setAttribute("aria-pressed", String(button.dataset.level === level));
+    });
+    if (level === "Undergraduate") {
+      copy.innerHTML = `<p>Data now sits behind decisions in health, climate research, biology, and many other fields. The bachelor’s, taught by Computer Science together with Mathematics and Statistics, is where you learn to explore a data set, prepare it, picture it, compute with it, and make a prediction.</p><p>The same years also cover the working habits the faculty names with the technical work: problem solving, time management, teamwork, integrity, and communication. The aim is a graduate who can manage a large data set, interpret it, and draw a conclusion from it.</p>`;
+      official.href = "https://www.uregina.ca/academics/programs/science/data-science.html";
+    } else {
+      copy.innerHTML = `<p>This is the department’s professionally focused master’s, not a thesis. It starts from data-centred programming and the statistical ideas under machine learning, then moves through applied learning, large-scale analytics, and cloud computing.</p><p>The published order is fixed. It finishes with a seminar on professional practice and a capstone project that is presented in public. The first term of this style of program can be taken online.</p>`;
+      official.href = "https://www.uregina.ca/science/computer-science/graduate-programs/msc-cs-data-science.html";
+    }
+    factsList.innerHTML = facts[level]
+      .map(([label, value]) => `<dt>${esc(label)}</dt><dd>${esc(value)}</dd>`)
+      .join("");
+    renderFeatured(level);
+  }
+  document.querySelectorAll(".hero [data-level]").forEach((button) => {
+    button.addEventListener("click", () => {
+      setLevel(button.dataset.level);
+      renderCareer();
+    });
+  });
+  setLevel(programLevel);
+
+  const icon = (paths) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
+  const skills = [
+    {
+      id: "code",
+      name: "Programming",
+      short: "Turn a problem into code",
+      detail: "You learn to break a question into steps a computer can repeat, then organize that code so someone else can change it.",
+      points: ["Write clear procedures in a general-purpose language", "Use Python for tables, models, and data work", "Structure larger programs so they stay maintainable"],
+      svg: icon(`<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>`),
+    },
+    {
+      id: "stats",
+      name: "Statistics",
+      short: "Say how sure you are",
+      detail: "A result is a claim about more than the rows in front of you. Statistics is how you estimate, test, and show the uncertainty.",
+      points: ["Summarize variation instead of a single number", "Estimate and test from a sample", "Fit linear models and check when the fit is wrong"],
+      svg: icon(`<path d="M4 19V10"/><path d="M10 19V5"/><path d="M16 19v-6"/><path d="M3 19h16"/>`),
+    },
+    {
+      id: "learn",
+      name: "Machine learning",
+      short: "Find a pattern, then check it",
+      detail: "You learn the main ways a model can search, classify, and predict, and the checks that stop a neat fit from being a false one.",
+      points: ["Compare search, reasoning, and learning methods", "Train models for prediction", "Notice over-fitting and measure accuracy"],
+      svg: icon(`<circle cx="6" cy="7" r="2"/><circle cx="17" cy="6" r="2"/><circle cx="8" cy="17" r="2"/><circle cx="17" cy="16" r="2"/><path d="M8 8l7-1M8 16l7-1M8 9v6"/>`),
+    },
+    {
+      id: "wrangle",
+      name: "Data wrangling",
+      short: "Make a messy table usable",
+      detail: "Most of a real project is preparation. You learn to clean, join, and record what changed before anyone trusts an analysis.",
+      points: ["Repair missing values and odd formats", "Join sources that do not quite match", "Keep a record of every change"],
+      svg: icon(`<path d="M4 6h16"/><path d="M4 12h10"/><path d="M4 18h7"/><path d="M17 14l3 3-3 3"/>`),
+    },
+    {
+      id: "data",
+      name: "Databases",
+      short: "Store data so it can be asked",
+      detail: "Spreadsheets run out. You learn to model data, query it, and retrieve the rows a question actually needs.",
+      points: ["Model tables and relationships", "Write queries instead of copying cells", "Understand transactions and retrieval"],
+      svg: icon(`<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/>`),
+    },
+    {
+      id: "math",
+      name: "Mathematics",
+      short: "The language under the methods",
+      detail: "Calculus, linear algebra, and proof sit under optimization, high-dimensional data, and any claim you want to justify.",
+      points: ["Use rates of change and linear algebra", "Treat a wide table as vectors and matrices", "Write why a statement follows"],
+      svg: icon(`<path d="M4 18 10 6l4 7 2-3 4 8"/>`),
+    },
+  ];
+  let skillId = skills[0].id;
+  const skillGrid = document.getElementById("skill-grid");
+  const skillDetail = document.getElementById("skill-detail");
+  function renderSkills() {
+    skillGrid.innerHTML = skills
+      .map(
+        (skill) => `<button class="skill-card" type="button" role="listitem" data-skill="${skill.id}" aria-pressed="${skill.id === skillId}"><span class="skill-ico">${skill.svg}</span><span><strong>${esc(skill.name)}</strong><small>${esc(skill.short)}</small></span></button>`
+      )
+      .join("");
+    const skill = skills.find((item) => item.id === skillId);
+    skillDetail.innerHTML = `
+      <p class="muted" style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;margin:0">Selected skill</p>
+      <h3>${esc(skill.name)}</h3>
+      <p>${esc(skill.detail)}</p>
+      <ul class="skill-points">${skill.points.map((point) => `<li>${esc(point)}</li>`).join("")}</ul>`;
+  }
+  skillGrid.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-skill]");
+    if (!button) return;
+    skillId = button.dataset.skill;
+    renderSkills();
+  });
+  renderSkills();
+
+  const sectors = document.getElementById("sectors");
+  const career = document.getElementById("career");
+  let careerId = DATA.careers[0].id;
+  sectors.innerHTML = DATA.careers
+    .map(
+      (item) => `<button class="chip" type="button" role="tab" data-career="${item.id}" aria-pressed="false" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${item.icon}</svg>${esc(item.sector)}</button>`
+    )
+    .join("");
+  function renderCareer() {
+    sectors.querySelectorAll("[data-career]").forEach((button) => {
+      const on = button.dataset.career === careerId;
+      button.setAttribute("aria-pressed", String(on));
+      button.setAttribute("aria-selected", String(on));
+    });
+    const item = DATA.careers.find((entry) => entry.id === careerId);
+    const picks = item.courses[programLevel] || [];
+    career.innerHTML = `
+      <div>
+        <p class="muted" style="font-size:0.75rem;margin:0">${esc(item.employer)}</p>
+        <h3 class="display" style="font-size:1.6rem;margin-top:0.3rem">${esc(item.role)}</h3>
+        <p style="line-height:1.6">${esc(item.blurb)}</p>
+      </div>
+      <div class="course-list">
+        <p class="muted" style="font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;margin:0">Courses that feed this work</p>
+        <ul>${picks.map((pick) => `<li>${esc(pick.code)}</li>`).join("")}</ul>
+      </div>`;
+  }
+  sectors.addEventListener("click", (event) => {
+    const button = event.target.closest("button");
+    if (!button) return;
+    careerId = button.dataset.career;
+    renderCareer();
+  });
+  sectors.addEventListener("keydown", (event) => {
+    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+    event.preventDefault();
+    const index = DATA.careers.findIndex((item) => item.id === careerId);
+    const step = event.key === "ArrowRight" ? 1 : -1;
+    const next = DATA.careers[(index + step + DATA.careers.length) % DATA.careers.length];
+    careerId = next.id;
+    renderCareer();
+    sectors.querySelector(`[data-career="${careerId}"]`).focus();
+  });
+  renderCareer();
+
+  const faqList = document.getElementById("faq-list");
+  function renderFaq() {
+    const needle = document.getElementById("faq-search").value.trim().toLowerCase();
+    const rows = DATA.faqs.filter((item) => `${item.question} ${item.answer}`.toLowerCase().includes(needle));
+    if (!rows.length) {
+      faqList.innerHTML = `<p class="empty">Nothing in the list matches “${esc(document.getElementById("faq-search").value)}”. Try “transfer”, “scholarship”, or “thesis”.</p>`;
+      return;
+    }
+    faqList.innerHTML = `<div class="accordion">${rows
+      .map(
+        (item) => `<div class="acc-item"><button class="acc-btn" type="button" aria-expanded="false"><span>${esc(item.question)}</span><span aria-hidden="true">▾</span></button><div class="acc-panel">${esc(item.answer)}</div></div>`
+      )
+      .join("")}</div>`;
+    bindAccordion(faqList);
+  }
+  document.getElementById("faq-search").addEventListener("input", renderFaq);
+  renderFaq();
+}
+
+if (page === "curriculum") {
+  let level = programLevel;
+  const results = document.getElementById("course-results");
+
+  function renderCourses() {
+    const needle = document.getElementById("course-search").value.trim().toLowerCase();
+    const visible = DATA.courses.filter((course) => {
+      if (course.level !== level) return false;
+      if (!needle) return true;
+      return `${course.code} ${course.name} ${course.summary}`.toLowerCase().includes(needle);
+    });
+    if (!visible.length) {
+      results.innerHTML = `<div class="empty"><p class="display" style="font-size:1.6rem;color:var(--foreground);margin:0">No course cards for this slice</p><p>Nothing matches “${esc(document.getElementById("course-search").value)}”. Clear the search.</p></div>`;
+      return;
+    }
+    results.innerHTML = `<ul class="grid2">${visible
+      .map(
+        (course) => `<li><button class="card" type="button" data-code="${esc(course.code)}"><span class="card-top"><span class="code" style="font-family:ui-monospace,monospace;font-size:0.75rem;color:var(--primary)">${esc(course.code)}</span><span class="badge">${esc(course.area)}</span></span><h3>${esc(course.name)}</h3><p>${esc(course.summary)}</p></button></li>`
+      )
+      .join("")}</ul>`;
+  }
+
+  function renderAll() {
+    programLevel = level;
+    document.querySelectorAll(".pills [data-level]").forEach((button) => {
+      const on = button.dataset.level === level;
+      button.setAttribute("aria-pressed", String(on));
+      button.classList.toggle("ghost", !on);
+    });
+    document.getElementById("curr-lead").textContent =
+      level === "Undergraduate"
+        ? "Twenty-five required courses are listed here: eleven computer science, six statistics, four mathematics, and four cross-listed."
+        : "The master’s checklist is not the bachelor’s list. It is the department’s strict 30-credit sequence, from CS 700 through the CS 719 project.";
+    renderCourses();
+  }
+
+  document.querySelector(".pills").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-level]");
+    if (!button) return;
+    level = button.dataset.level;
+    renderAll();
+  });
+  document.getElementById("course-search").addEventListener("input", renderCourses);
+  results.addEventListener("click", (event) => {
+    const button = event.target.closest(".card");
+    if (!button) return;
+    const course = DATA.courses.find((item) => item.code === button.dataset.code);
+    const back = document.createElement("div");
+    back.className = "modal-back";
+    back.innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-labelledby="dlg-title"><button class="icon-btn x" type="button" aria-label="Close">×</button><h2 id="dlg-title">${esc(course.name)}</h2><p class="muted">${esc(course.code)} · ${esc(course.credits)} credit hours · ${esc(course.level)}</p><p>${esc(course.detail)}</p></div>`;
+    document.body.append(back);
+    const close = () => back.remove();
+    back.addEventListener("click", (click) => {
+      if (click.target === back || click.target.closest(".x")) close();
+    });
+    document.addEventListener(
+      "keydown",
+      function onKey(keyEvent) {
+        if (keyEvent.key === "Escape") {
+          close();
+          document.removeEventListener("keydown", onKey);
+        }
+      }
+    );
+  });
+  renderAll();
+}
+
+}
+boot();
+document.addEventListener("click", (event) => {
+  const link = event.target.closest("[data-nav]");
+  if (!link) return;
+  event.preventDefault();
+  const next = link.getAttribute("data-nav");
+  const hash = next === "curriculum" ? "#curriculum" : "#program";
+  if (location.hash === hash) {
+    const sheet = document.querySelector(".sheet");
+    const sheetBack = document.querySelector(".sheet-back");
+    if (sheet) sheet.hidden = true;
+    if (sheetBack) sheetBack.hidden = true;
+    return;
+  }
+  location.hash = hash;
+});
+function scrollToHash() {
+  const id = location.hash.replace("#", "");
+  if (!id || id === "program" || id === "curriculum") return;
+  const target = document.getElementById(id);
+  if (target) target.scrollIntoView({ behavior: "instant", block: "start" });
+}
+window.addEventListener("hashchange", () => {
+  const next = pageFromHash();
+  if (next !== page) {
+    page = next;
+    boot();
+    window.scrollTo(0, 0);
+    return;
+  }
+  scrollToHash();
+});
+scrollToHash();
+
+  </script>
+</body>
+</html>
